@@ -2,22 +2,24 @@ on:
   push:
     branches:
       - test
+      - test2
     paths:
-      - 'src/**'
-      - 'package.json'
+      - src/**
+      - package.json
+
   pull_request:
     branches:
       - test
+    paths:
+      - src/**
+      - package.json
+
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Which environment to deploy to?'
+        description: Which environment to deploy to?
         required: true
-        default: 'test'
-
-jobs:
-  say-hello:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Print a greeting
-        run: echo "Hello from GitHub Actions!"
+        default: test
+        type: choice
+        options:
+          - test
