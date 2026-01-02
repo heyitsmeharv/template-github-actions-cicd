@@ -1,0 +1,13 @@
+{
+  "name": "template-github-actions-cicd",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}

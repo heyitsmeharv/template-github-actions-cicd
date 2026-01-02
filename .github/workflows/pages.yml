@@ -1,0 +1,102 @@
+# Deploy to GitHub Pages
+# Purpose: build the site, package the build output as an artifact, then deploy to Pages.
+
+name: Deploy to GitHub Pages
+
+on:
+  # Deploy automatically when main changes.
+  push:
+    branches: [ main ]
+
+  # Allow manual deploys (optionally deploy a specific ref).
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Git ref to deploy (branch, tag, or SHA). Leave empty for default."
+        required: false
+        default: ""
+
+# Least privilege permissions for this workflow.
+permissions:
+  contents: read   # Required for checkout.
+  pages: write     # Required to publish to Pages.
+  id-token: write  # Required by the Pages deploy action.
+  actions: read    # Required for artifact handling in some setups.
+
+# Prevent overlapping deploys.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    # Build job: install → test → build → upload artifact.
+    runs-on: ubuntu-latest
+
+    outputs:
+      # Expose Pages base path in case other jobs need it.
+      base_path: ${{ steps.configure-pages.outputs.base_path }}
+
+    steps:
+      # Pull the repo onto the runner.
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          # If workflow_dispatch input is set, deploy that ref; otherwise deploy the current ref.
+          ref: ${{ inputs.ref || github.ref }}
+
+      # Determine the correct base path for GitHub Pages project sites.
+      - name: Configure Pages
+        id: configure-pages
+        uses: actions/configure-pages@v5
+
+      # Install Node and enable npm caching (npm download cache).
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      # Install dependencies from package-lock.json (reproducible installs).
+      - name: Install dependencies
+        working-directory: site
+        run: npm ci
+
+      # Run the test suite (CI gate).
+      - name: Run tests
+        working-directory: site
+        run: npm test
+
+      # Build the project and inject build metadata into the frontend.
+      - name: Build
+        working-directory: site
+        env:
+          # Use the correct base path for GitHub Pages project sites.
+          BASE_PATH: ${{ steps.configure-pages.outputs.base_path }}
+          # Build metadata displayed on the site.
+          VITE_COMMIT_SHA: ${{ github.sha }}
+          VITE_BUILD_TIME: ${{ github.run_started_at }}
+        run: npm run build
+
+      # Package build output for the deploy job.
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/dist
+
+  deploy:
+    # Deploy job: publish the artifact to GitHub Pages.
+    runs-on: ubuntu-latest
+    needs: build
+
+    # Tie the deployment to the github-pages environment (supports approvals/protection rules).
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+
+    steps:
+      # Deploy the uploaded artifact to GitHub Pages.
+      - name: Deploy
+        id: deploy
+        uses: actions/deploy-pages@v4
