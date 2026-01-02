@@ -4,9 +4,9 @@
 name: Deploy to GitHub Pages
 
 on:
-  # Deploy automatically when main changes.
+  # Deploy automatically when main and develop changes.
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
 
   # Allow manual deploys (optionally deploy a specific ref).
   workflow_dispatch:
