@@ -80,7 +80,6 @@ jobs:
           echo "VITE_WORKFLOW=${GITHUB_WORKFLOW}" >> "$GITHUB_ENV"
           echo "VITE_RUN_NUMBER=${GITHUB_RUN_NUMBER}" >> "$GITHUB_ENV"
           echo "VITE_RUN_ATTEMPT=${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_ENV"
-          echo "VITE_RUN_ID=${GITHUB_RUN_ID}" >> "$GITHUB_ENV"
           echo "VITE_SERVER_URL=${GITHUB_SERVER_URL}" >> "$GITHUB_ENV"
           echo "VITE_RUN_URL=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" >> "$GITHUB_ENV"
           echo "VITE_CI_WORKFLOW_FILE=ci.yml" >> "$GITHUB_ENV"
