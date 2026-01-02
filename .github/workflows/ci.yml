@@ -6,11 +6,11 @@ name: CI
 on:
   # Run CI for pull requests targeting main.
   pull_request:
-    branches: [ main ]
-
-  # Run CI for pushes to main and develop.
-  push:
     branches: [ main, develop ]
+
+  # Run CI for pushes to main.
+  push:
+    branches: [ main ]
 
 jobs:
   ci:
