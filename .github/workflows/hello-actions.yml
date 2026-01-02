@@ -1,3 +1,5 @@
+name: Hello Actions
+
 on:
   push:
     branches:
@@ -23,3 +25,10 @@ on:
         type: choice
         options:
           - test
+
+jobs:
+  say-hello:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print a greeting
+        run: echo "Hello from GitHub Actions!"
