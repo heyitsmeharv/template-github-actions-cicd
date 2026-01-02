@@ -1,3 +1,5 @@
+import { getMeta, repoParts, badgeUrl } from "./meta.js";
+
 function el(tag, attrs = {}, html = "") {
   const node = document.createElement(tag);
   Object.entries(attrs).forEach(([k, v]) => node.setAttribute(k, v));
@@ -7,15 +9,6 @@ function el(tag, attrs = {}, html = "") {
 
 function safe(v) {
   return v && String(v).trim().length ? String(v) : "unknown";
-}
-
-function repoParts(full) {
-  const [owner, repo] = (full || "").split("/");
-  return { owner, repo };
-}
-
-function badgeUrl({ serverUrl, repoFull, workflowFile, branch }) {
-  return `${serverUrl}/${repoFull}/actions/workflows/${workflowFile}/badge.svg?branch=${encodeURIComponent(branch)}`;
 }
 
 async function latestRun({ owner, repo, workflowFile, branch }) {
@@ -37,21 +30,7 @@ async function latestRun({ owner, repo, workflowFile, branch }) {
   };
 }
 
-const meta = {
-  commit:           safe(import.meta.env.VITE_COMMIT_SHA),
-  built:            safe(import.meta.env.VITE_BUILD_TIME),
-  branch:           safe(import.meta.env.VITE_REF_NAME),
-  repoFull:         safe(import.meta.env.VITE_REPO),
-  actor:            safe(import.meta.env.VITE_ACTOR),
-  event:            safe(import.meta.env.VITE_EVENT_NAME),
-  workflow:         safe(import.meta.env.VITE_WORKFLOW),
-  runUrl:           safe(import.meta.env.VITE_RUN_URL),
-  runNumber:        safe(import.meta.env.VITE_RUN_NUMBER),
-  runAttempt:       safe(import.meta.env.VITE_RUN_ATTEMPT),
-  serverUrl:        safe(import.meta.env.VITE_SERVER_URL),
-  ciWorkflowFile:   safe(import.meta.env.VITE_CI_WORKFLOW_FILE),
-  pagesWorkflowFile:safe(import.meta.env.VITE_PAGES_WORKFLOW_FILE)
-};
+const meta = getMeta(import.meta.env);
 
 const root = document.querySelector("#meta");
 root.innerHTML = "";
