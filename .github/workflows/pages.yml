@@ -68,15 +68,30 @@ jobs:
         working-directory: site
         run: npm test
 
+      # Set build metadata for the frontend.
+      - name: Set build metadata
+        run: |
+          echo "VITE_COMMIT_SHA=${GITHUB_SHA}" >> "$GITHUB_ENV"
+          echo "VITE_BUILD_TIME=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_ENV"
+          echo "VITE_REF_NAME=${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
+          echo "VITE_REPO=${GITHUB_REPOSITORY}" >> "$GITHUB_ENV"
+          echo "VITE_ACTOR=${GITHUB_ACTOR}" >> "$GITHUB_ENV"
+          echo "VITE_EVENT_NAME=${GITHUB_EVENT_NAME}" >> "$GITHUB_ENV"
+          echo "VITE_WORKFLOW=${GITHUB_WORKFLOW}" >> "$GITHUB_ENV"
+          echo "VITE_RUN_NUMBER=${GITHUB_RUN_NUMBER}" >> "$GITHUB_ENV"
+          echo "VITE_RUN_ATTEMPT=${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_ENV"
+          echo "VITE_RUN_ID=${GITHUB_RUN_ID}" >> "$GITHUB_ENV"
+          echo "VITE_SERVER_URL=${GITHUB_SERVER_URL}" >> "$GITHUB_ENV"
+          echo "VITE_RUN_URL=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" >> "$GITHUB_ENV"
+          echo "VITE_CI_WORKFLOW_FILE=ci.yml" >> "$GITHUB_ENV"
+          echo "VITE_PAGES_WORKFLOW_FILE=pages.yml" >> "$GITHUB_ENV"
+
       # Build the project and inject build metadata into the frontend.
       - name: Build
         working-directory: site
         env:
           # Use the correct base path for GitHub Pages project sites.
           BASE_PATH: ${{ steps.configure-pages.outputs.base_path }}
-          # Build metadata displayed on the site.
-          VITE_COMMIT_SHA: ${{ github.sha }}
-          VITE_BUILD_TIME: ${{ github.run_started_at }}
         run: npm run build
 
       # Package build output for the deploy job.
