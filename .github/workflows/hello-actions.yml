@@ -1,0 +1,23 @@
+on:
+  push:
+    branches:
+      - test
+    paths:
+      - 'src/**'
+      - 'package.json'
+  pull_request:
+    branches:
+      - test
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Which environment to deploy to?'
+        required: true
+        default: 'test'
+
+jobs:
+  say-hello:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print a greeting
+        run: echo "Hello from GitHub Actions!"
