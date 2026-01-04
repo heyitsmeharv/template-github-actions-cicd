@@ -1,0 +1,48 @@
+# Shared Node CI (reusable)
+# Purpose: standardise install → test → build so other workflows can call it.
+
+name: Shared Node CI
+
+on:
+  workflow_call:
+    # Inputs let the caller customise this workflow.
+    inputs:
+      node-version:
+        required: true
+        type: string
+      working-directory:
+        required: true
+        type: string
+
+jobs:
+  ci:
+    # Each job runs on a fresh runner (VM).
+    runs-on: ubuntu-latest
+
+    steps:
+      # Pull the repo onto the runner.
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      # Install Node and enable npm caching (npm download cache).
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: npm
+          cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+
+      # Install dependencies from package-lock.json (reproducible installs).
+      - name: Install dependencies
+        working-directory: ${{ inputs.working-directory }}
+        run: npm ci
+
+      # Run the test suite (CI gate).
+      - name: Run tests
+        working-directory: ${{ inputs.working-directory }}
+        run: npm test
+
+      # Build the project (produces build output).
+      - name: Build
+        working-directory: ${{ inputs.working-directory }}
+        run: npm run build
