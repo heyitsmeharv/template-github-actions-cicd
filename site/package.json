@@ -1,7 +1,7 @@
 {
   "name": "template-github-actions-cicd",
   "description": "Template repo for my GitHub Actions CI/CD blog post - builds, tests, and deploys a simple website via GitHub Actions.",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "author": "Adam Harvey",
   "type": "module",
   "scripts": {
