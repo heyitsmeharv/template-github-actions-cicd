@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GitHub Actions CI/CD Playground</title>
+  <style>
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto;
+      margin: 0;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+
+    .card {
+      max-width: 960px;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 1.5rem;
+    }
+
+    code {
+      background: #f3f4f6;
+      padding: 0.1rem 0.35rem;
+      border-radius: 6px;
+    }
+
+    .muted {
+      color: #6b7280;
+    }
+
+    ul {
+      margin-top: 0.25rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h1>GitHub Actions CI/CD Playground</h1>
+    <p class="muted">
+      This site is built + deployed by GitHub Actions to GitHub Pages.
+    </p>
+
+    <h2>What this repo demonstrates</h2>
+    <ul>
+      <li><b>CI</b> on <code>pull_request</code> and <code>push</code></li>
+      <li><b>Reusable workflows</b> (shared Node CI)</li>
+      <li><b>Artifacts</b> passed from build → deploy</li>
+      <li><b>Environments</b> via <code>github-pages</code></li>
+      <li><b>Permissions</b> locked down (least privilege)</li>
+      <li><b>Build metadata</b> injected at build time</li>
+    </ul>
+
+    <h2>Build metadata</h2>
+    <div id="meta" class="muted"></div>
+
+    <h2>Glossary</h2>
+    <ul>
+      <li><code>on</code> = trigger</li>
+      <li><code>jobs</code> = separate runners</li>
+      <li><code>steps</code> = commands/actions in a job</li>
+      <li><code>uses</code> = run an action</li>
+      <li><code>run</code> = run a shell command</li>
+    </ul>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
