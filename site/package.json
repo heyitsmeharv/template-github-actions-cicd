@@ -9,7 +9,8 @@
     "build": "vite build",
     "test": "node --test",
     "prepare": "husky",
-    "release": "commit-and-tag-version"
+    "release": "commit-and-tag-version",
+    "release:publish": "git push --follow-tags origin main && gh release create $(git describe --tags --abbrev=0) --notes-from-tag"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.3.0",
